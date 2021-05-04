@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FinancesController">
+   <children>
+      <MenuBar prefHeight="600.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#saveState" text="Save" />
+                  <Menu mnemonicParsing="false" text="Import from...">
+                    <items>
+                    <MenuItem mnemonicParsing="false" onAction="#importCSV" text="CSV file" />
+                      <MenuItem mnemonicParsing="false" onAction="#importTXT" text="Text file" />
+                    </items>
+                  </Menu>
+                  <Menu fx:id="exportMenu" mnemonicParsing="false" text="Export as...">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#exportCSV" text="CSV File" />
+                      <MenuItem mnemonicParsing="false" onAction="#exportTXT" text="Text File" />
+                      <MenuItem mnemonicParsing="false" onAction="#exportImage" text="Image File" />
+                    </items>
+                  </Menu>
+              <MenuItem mnemonicParsing="false" onAction="#closeWindow" text="Quit" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+                  <Menu fx:id="sortListMenu" mnemonicParsing="false" text="Sort by...">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#sortDescendingDate" text="date ↑" />
+                      <MenuItem mnemonicParsing="false" onAction="#sortAscendingDate" text="date ↓" />
+                      <MenuItem mnemonicParsing="false" onAction="#sortDescendingAmount" text="amount ↑" />
+                      <MenuItem mnemonicParsing="false" onAction="#sortAscendingAmount" text="amount ↓" />
+                    </items>
+                  </Menu>
+              <MenuItem fx:id="selectAllMenuItem" mnemonicParsing="false" onAction="#selectAll" text="Select All" />
+              <MenuItem fx:id="deselectMenuItem" mnemonicParsing="false" onAction="#deselect" text="Deselect" />
+              <MenuItem fx:id="deleteSelectionMenuItem" mnemonicParsing="false" onAction="#deleteSelection" text="Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#showAbout" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <SplitPane dividerPositions="0.3032581453634085" layoutX="325.0" layoutY="28.0" prefHeight="572.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="28.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+            <children>
+              <VBox prefHeight="570.0" prefWidth="234.0" spacing="30.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <children>
+                  <VBox prefWidth="100.0" spacing="10.0">
+                    <children>
+                      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Amount" />
+                      <TextField fx:id="amountField" />
+                    </children>
+                  </VBox>
+                  <VBox prefWidth="100.0" spacing="10.0">
+                    <children>
+                      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Date" />
+                      <DatePicker fx:id="datePicker" />
+                    </children>
+                  </VBox>
+                  <VBox prefWidth="100.0" spacing="10.0">
+                    <children>
+                      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Title" />
+                      <TextArea fx:id="titleField" wrapText="true" />
+                    </children>
+                  </VBox>
+                  <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+                    <children>
+                      <Button fx:id="addBtn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addNew" text="Add" />
+                      <Button fx:id="clearBtn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#clearFields" text="Clear" />
+                    </children>
+                  </HBox>
+                </children>
+                <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                </padding>
+              </VBox>
+            </children>
+          </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+            <children>
+              <SplitPane dividerPositions="0.6778169014084507" orientation="VERTICAL" prefHeight="570.0" prefWidth="691.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <items>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="338.0" prefWidth="689.0">
+                    <children>
+                      <TableView fx:id="mainTable" editable="true" prefHeight="280.0" prefWidth="689.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <columns>
+                          <TableColumn fx:id="amountClm" editable="false" prefWidth="135.0" sortable="false" text="Amount" />
+                          <TableColumn fx:id="dateClm" editable="false" prefWidth="120.0" sortable="false" text="Date" />
+                          <TableColumn fx:id="titleClm" editable="true" onEditCommit="#titleEdited" prefWidth="312.0" sortable="false" text="Title" />
+                        </columns>
+                        <contextMenu>
+                          <ContextMenu fx:id="contextMenu">
+                            <items>
+                              <MenuItem fx:id="itemDeleteMenu" mnemonicParsing="false" onAction="#deleteSelection" text="Delete Item" />
+                            </items>
+                          </ContextMenu>
+                        </contextMenu>
+                        <columnResizePolicy>
+                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                        </columnResizePolicy>
+                      </TableView>
+                    </children>
+                  </AnchorPane>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                    <children>
+                      <HBox alignment="CENTER_LEFT" prefHeight="138.0" prefWidth="689.0" spacing="40.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <children>
+                          <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0">
+                            <children>
+                              <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                                <children>
+                                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Total gained:" />
+                                  <Text fx:id="totalGainedText" strokeType="OUTSIDE" strokeWidth="0.0" />
+                                </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                                <children>
+                                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Total spent:" />
+                                  <Text fx:id="totalSpentText" strokeType="OUTSIDE" strokeWidth="0.0" />
+                                </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                                <children>
+                                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Total:" />
+                                  <Text fx:id="totalText" strokeType="OUTSIDE" strokeWidth="0.0" />
+                                </children>
+                              </HBox>
+                            </children>
+                            <HBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                            </HBox.margin>
+                          </VBox>
+                          <LineChart fx:id="chart" animated="true" prefHeight="95.0" prefWidth="500.0" titleSide="BOTTOM">
+                            <xAxis>
+                              <NumberAxis animated="true" label="Time" side="BOTTOM" fx:id="xAxis" />
+                            </xAxis>
+                            <yAxis>
+                              <NumberAxis fx:id="yAxis" animated="true" label="Money" side="LEFT" />
+                            </yAxis>
+                          </LineChart>
+                        </children>
+                      </HBox>
+                    </children>
+                  </AnchorPane>
+                </items>
+              </SplitPane>
+            </children>
+        </AnchorPane>
+      </items>
+    </SplitPane>
+  </children>
+</AnchorPane>
