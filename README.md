@@ -3,7 +3,7 @@
 # Description
 
 I created this app to keep track of my monthly income and expenses.<br>
-It displays a list of [Transactions](Transaction.java) in a table so that I can easily see how I've been managing my finances.
+It displays a list of [Transactions](src/main/java/resources/Transaction.java) in a table so that I can easily see how I've been managing my finances.
 
 Every Transaction has 3 attributes:
 + the amount of money spent/gained

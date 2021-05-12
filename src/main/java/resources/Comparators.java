@@ -1,3 +1,5 @@
+package src.main.java.resources;
+
 import java.util.Comparator;
 
 public class Comparators {

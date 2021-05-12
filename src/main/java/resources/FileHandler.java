@@ -1,3 +1,5 @@
+package src.main.java.resources;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -12,6 +14,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -30,6 +34,11 @@ public class FileHandler {
 
     public FileHandler(AnchorPane rootPane) {
         this.rootPane = rootPane;
+        try {
+            Files.createDirectories(Paths.get("data/"));
+        } catch (IOException e) {
+            AlertUser.show("Error", null, "Could not create folder to store user's data.");
+        }
     }
 
     // launches a FileChooser with the given preferences
@@ -41,8 +50,7 @@ public class FileHandler {
         fileChooser.setInitialFileName(initialFileName);
         fileChooser.getExtensionFilters().add(extensionFilter);
 
-        // different method based on wether the file has to be opened for writing or
-        // reading
+        // different method based on wether the file has to be opened for writing or reading
         if (toSave)
             file = fileChooser.showSaveDialog(rootPane.getScene().getWindow());
         else
@@ -58,17 +66,16 @@ public class FileHandler {
         if (file.getName().endsWith("." + extension))
             return true;
 
-        // shows an alert informing the user that the file won't be used for the desired
-        // operations
+        // shows an alert informing the user that the file won't be used for the desired operations
         AlertUser.show("Error in choosing file", null, "Can only operate with " + extension.toUpperCase() + " files.");
         return false;
     }
 
-    public void importFromCSV(ObservableList<Transaction> list) {
+    public boolean importFromCSV(ObservableList<Transaction> list) {
         // lets the user choose a file
         File file = chooseFile("Import from...", false, null, new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv"));
         if (!validFile(file, "csv"))
-            return;
+            return false;
         // populates the list by reading the content of the file
         try (Scanner sc = new Scanner(new BufferedReader(new FileReader(file)))) {
             list.clear();
@@ -78,14 +85,16 @@ public class FileHandler {
                 list.add(new Transaction(sc.nextDouble(), LocalDate.parse(sc.next()), sc.next()));
         } catch (IOException e) {
             AlertUser.show("Error", null, "Exception while importing from CSV file");
+            return false;
         }
+        return true;
     }
 
-    public void importFromTXT(ObservableList<Transaction> list) {
+    public boolean importFromTXT(ObservableList<Transaction> list) {
         // lets the user choose a file
         File file = chooseFile("Import from...", false, null, new FileChooser.ExtensionFilter("Text files (*.txt)", "*.txt"));
         if (!validFile(file, "txt"))
-            return;
+            return false;
         // populates the list by reading the content of the file
         try (Scanner sc = new Scanner(new BufferedReader(new FileReader(file)))) {
             list.clear();
@@ -94,7 +103,9 @@ public class FileHandler {
                 list.add(new Transaction(sc.nextDouble(), LocalDate.parse(sc.next()), sc.next()));
         } catch (IOException e) {
             AlertUser.show("Error", null, "Exception while importing from Text file");
+            return false;
         }
+        return true;
     }
 
     public void exportToCSV(ObservableList<Transaction> list) {
@@ -155,9 +166,8 @@ public class FileHandler {
         try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
             list.addAll((ArrayList<Transaction>) ois.readObject());
         } catch (FileNotFoundException e1) {
-            // when the user launches the app for the first time the backup file will not be
-            // found
-            // in that case I don't want to show an error message
+            // when the user launches the app for the first time the backup file
+            // will not be found. In that case I don't want to show an error message
             if (showError)
                 AlertUser.show("Error", null, "File not found");
         } catch (IOException | ClassNotFoundException e2) {

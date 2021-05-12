@@ -1,3 +1,5 @@
+package src.main.java.resources;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -65,7 +67,7 @@ public class Transaction implements Serializable, Comparable<Transaction> {
     public String toString() {
         String s = "";
         s += "Amount: " + amount + "\n";
-        s += "Date:   " + date   + "\n";
+        s += "Date:   " + date + "\n";
         s += "Title:  " + title;
         return s;
     }

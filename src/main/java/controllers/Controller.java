@@ -1,3 +1,5 @@
+package src.main.java.controllers;
+
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -28,7 +30,9 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
-public class FinancesController implements Initializable {
+import src.main.java.resources.*;
+
+public class Controller implements Initializable {
     @FXML
     private AnchorPane rootPane;
     @FXML
@@ -96,14 +100,14 @@ public class FinancesController implements Initializable {
 
     @FXML
     public void importCSV(ActionEvent event) {
-        fileHandler.importFromCSV(transactionsList);
-        onChange();
+        if (fileHandler.importFromCSV(transactionsList))
+            onChange();
     }
 
     @FXML
     public void importTXT(ActionEvent event) {
-        fileHandler.importFromTXT(transactionsList);
-        onChange();
+        if (fileHandler.importFromTXT(transactionsList))
+            onChange();
     }
 
     @FXML
@@ -208,7 +212,6 @@ public class FinancesController implements Initializable {
     public void titleEdited(TableColumn.CellEditEvent<Transaction, String> event) {
         Transaction t = mainTable.getSelectionModel().getSelectedItem();
         t.setTitle(event.getNewValue());
-        // saves the new state of the list
         fileHandler.saveToFile(backupFilename, transactionsList);
     }
 
@@ -235,11 +238,9 @@ public class FinancesController implements Initializable {
                 spent -= t.getAmount();
             total += t.getAmount();
             int timeDiff = dateDifference(t.getDate(), LocalDate.now());
-            // adds the various points to the graph
             series.getData().add(new XYChart.Data<Number, Number>(timeDiff, total));
         }
 
-        // updates the text info
         totalGainedText.setText("€ " + String.format("%.2f", gained));
         totalSpentText.setText("€ " + String.format("%.2f", spent));
         totalText.setText("€ " + String.format("%.2f", total));
@@ -248,11 +249,8 @@ public class FinancesController implements Initializable {
     // this function is called whenever something changes in the list
     // (e.g. after every addition, removal or title change)
     private void onChange() {
-        // sorts the list before doing anything else
         sortList();
-        // saves the new state of the list
         fileHandler.saveToFile(backupFilename, transactionsList);
-        // recalculates the values to show on the chart and in the text section
         populateChart();
     }
 
@@ -260,9 +258,7 @@ public class FinancesController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         transactionsList = FXCollections.observableArrayList();
         listCopy = FXCollections.observableArrayList();
-        // used to handle file reading/writing
         fileHandler = new FileHandler(rootPane);
-        // used to switch between different comparators
         comparators = new Comparators();
         sortingComparator = comparators.compareByDescendingDate();
         // needed to display the chart on the X axis
