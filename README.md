@@ -19,7 +19,7 @@ The **title** is not required but highly recommended in order to remember what t
 Under the main table there's a small text section which shows the definitive counters and a **Line Chart** that helps in
 better visualizing the changes over time.
 
-![alt text](screenshots/demo.png "App screenshot")
+![alt text](https://github.com/marcoplaitano/images/blob/main/finances_demo.png "App screenshot")
 
 -----
 
@@ -32,4 +32,4 @@ They can, nonetheless, export the data to either a **.csv** or **.txt** file tha
 If they choose, they can even save the current state of the graph as a **.png** image.<br>
 All this can be done with the "**Export as...**" and "**Import from...**" buttons.
 
-![alt text](screenshots/demo_export.png "Export data demo")
+![alt text](https://github.com/marcoplaitano/images/blob/main/finances_demo_export.png "Export data demo")
